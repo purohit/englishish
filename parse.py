@@ -17,15 +17,10 @@ class XReader:
                 "China", "India", "Bangladesh", "United Kingdom")
 
     def parse_country(self, data):
-        if data in ("Singapore", "SG"):
-            return "Singapore"
-        return data
+        return "Singapore" if data in ("Singapore", "SG") else data
 
     def start_element(self, name, attrs):
-        if name in ('text', 'country'):
-            self.read = name
-        else:
-            self.read = None
+        self.read = name if name in ('text', 'country') else None
 
     def end_element(self, name):
         if name == 'message' and self.should_classify:
@@ -39,12 +34,15 @@ class XReader:
             self.should_classify = self.valid_country(self.country)
             self.countries[self.country] += 1
 
-p = xml.parsers.expat.ParserCreate()
-x = XReader(MultinomialBayes())
-p.StartElementHandler = x.start_element
-p.EndElementHandler = x.end_element
-p.CharacterDataHandler = x.char_data
-p.ParseFile(open("data/smsCorpus_en_2011.12.30_all.xml"))
-# If there are less than these many labeled examples, don't use the example
-print x.classifier.classify("can u come to my house leh")
-print x.classifier.classify("Will you call me at 10am?")
+if __name__ == '__main__':
+    p = xml.parsers.expat.ParserCreate()
+    x = XReader(MultinomialBayes())
+    p.StartElementHandler = x.start_element
+    p.EndElementHandler = x.end_element
+    p.CharacterDataHandler = x.char_data
+    p.ParseFile(open("data/smsCorpus_en_2011.12.30_all.xml"))
+    for example in (("can u come to my house leh"),
+                    ("ni hen piao liang"),
+                    ("will u b rd l8ter?"),
+                    ("Will you call me at 10am?")):
+        print x.classifier.classify(example)
