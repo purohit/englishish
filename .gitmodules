@@ -1,0 +1,3 @@
+[submodule "multibayes"]
+	path = multibayes
+	url = git@github.com:purohit/multibayes.git
