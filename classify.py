@@ -36,4 +36,7 @@ for example, country in test_set:
     except MultinomialBayesException, e:
         pass
 
-print "Accuracy: {} correct/ {} incorrect of {} examples (accuracy: {:.2f}%)".format(correct, incorrect, correct+incorrect, 100.0* (correct/(correct+incorrect)))
+print "Training set size: {}, Test set size: {}\n {} correct/{} incorrect of {} examples (accuracy: {:.2f}%)".format(
+        len(training_set), len(test_set),
+        correct, incorrect, correct+incorrect, 100.0* (correct/(correct+incorrect))
+        )
