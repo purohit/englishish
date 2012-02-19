@@ -1,3 +1,5 @@
+from __future__ import division
+from collections import Counter
 from multibayes.multibayes import MultinomialBayes, MultinomialBayesException
 test_set = []
 training_set = []
@@ -16,21 +18,24 @@ with open("data/parsed_corpus.data", "r") as f:
         example, country = line.rstrip().split("\t")
         example = example.strip()
         if example:
-            country = country_to_lang[country]
+            lang = country_to_lang[country]
             if i%5 == 0:
-                test_set.append((example, country))
+                # use approx 20% of data for test set, other 80% for training
+                test_set.append((example, lang))
             else:
-                training_set.append((example, country))
+                training_set.append((example, lang))
             i += 1
 
+misclassifications = Counter()
 correct = 0
 incorrect = 0
 m = MultinomialBayes(training_set)
-for example, country in test_set:
+for example, lang in test_set:
     try:
         most_likely_class, prob = m.classify(example)[0]
-        if country != most_likely_class:
+        if lang != most_likely_class:
             incorrect += 1
+            misclassifications[(lang, most_likely_class)] += 1
         else:
             correct += 1
     except MultinomialBayesException, e:
@@ -38,5 +43,7 @@ for example, country in test_set:
 
 print "Training set size: {}, Test set size: {}\n {} correct/{} incorrect of {} examples (accuracy: {:.2f}%)".format(
         len(training_set), len(test_set),
-        correct, incorrect, correct+incorrect, 100.0* (correct/(correct+incorrect))
+        correct, incorrect, correct+incorrect, 100.0*(correct/(correct+incorrect))
         )
+for (true_lang, class_lang), number_wrong in misclassifications.most_common():
+    print "Misclassified {} as {}: {} times".format(true_lang, class_lang, number_wrong)
