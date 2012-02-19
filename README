@@ -1,1 +1,13 @@
 A classifier that determines if your message was in English, Singlish, or Indian English.
+
+The most recent results:
+
+Training set size: 31792, Test set size: 7949
+5933 correct/1913 incorrect of 7846 examples (accuracy: 75.62%)
+
+Misclassified Singlish as English: 753 times
+Misclassified Indian English as Singlish: 441 times
+Misclassified Indian English as English: 294 times
+Misclassified Singlish as Indian English: 193 times
+Misclassified English as Singlish: 188 times
+Misclassified English as Indian English: 44 times
