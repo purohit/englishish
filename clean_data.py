@@ -14,8 +14,7 @@ class XReader:
         self.classifier = classifier
 
     def valid_country(self, country):
-        return country in ("Singapore","United States",
-                "China", "India", "Bangladesh", "United Kingdom")
+        return country in ("Singapore","United States", "China", "India")
 
     def parse_country(self, data):
         return "Singapore" if data in ("Singapore", "SG") else data
